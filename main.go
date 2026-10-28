@@ -13,7 +13,22 @@ func main() {
 		scanner.Scan()
 		text := scanner.Text()
 		words := cleanInput(text)
-		fmt.Printf("Your command was: %s\n", words[0])
+		if len(words) < 1 {
+			fmt.Print("\n")
+			continue
+		}
+
+		commands := getCommands()
+		command, ok := commands[words[0]]
+		if !ok {
+			fmt.Println("Unknown command")
+			continue
+		}
+
+		err := command.callback()
+		if err != nil {
+			fmt.Printf("Error processing command %s: %v\n", command.name, err)
+		}
 	}
 }
 
