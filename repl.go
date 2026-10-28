@@ -9,22 +9,7 @@ import (
 type cliCommand struct {
 	name        string
 	description string
-	callback    func() error
-}
-
-func getCommands() map[string]cliCommand {
-	return map[string]cliCommand{
-		"help": {
-			name: "help",
-			description: "Displays a help message",
-			callback: commandHelp,
-		},
-		"exit": {
-			name: "exit",
-			description: "Exit the Pokedex",
-			callback: commandExit,
-		},
-	}
+	callback    func(*config) error
 }
 
 func cleanInput(text string) []string {
@@ -41,17 +26,17 @@ func cleanInput(text string) []string {
 	return result
 }
 
-func commandHelp() error {
+func commandHelp(options *config) error {
 	fmt.Println("Welcome to the Pokedex!")
 	fmt.Println("Usage:\n")
-	for _, val := range getCommands() {
+	for _, val := range options.commands {
 		fmt.Printf("%s: %s\n", val.name, val.description)
 	}
 
 	return nil
 }
 
-func commandExit() error {
+func commandExit(options *config) error {
 	fmt.Println("Closing the Pokedex... Goodbye!")
 	os.Exit(0)
 

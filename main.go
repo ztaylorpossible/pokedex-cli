@@ -6,7 +6,26 @@ import (
 	"os"
 )
 
+type config struct {
+	commands map[string]cliCommand
+}
+
 func main() {
+	options := config{
+		commands: map[string]cliCommand{
+			"help": {
+				name: "help",
+				description: "Displays a help message",
+				callback: commandHelp,
+			},
+			"exit": {
+				name: "exit",
+				description: "Exit the Pokedex",
+				callback: commandExit,
+			},
+		},
+	}
+
 	scanner := bufio.NewScanner(os.Stdin)
 	for {
 		fmt.Print("Pokedex > ")
@@ -18,14 +37,13 @@ func main() {
 			continue
 		}
 
-		commands := getCommands()
-		command, ok := commands[words[0]]
+		command, ok := options.commands[words[0]]
 		if !ok {
 			fmt.Println("Unknown command")
 			continue
 		}
 
-		err := command.callback()
+		err := command.callback(&options)
 		if err != nil {
 			fmt.Printf("Error processing command %s: %v\n", command.name, err)
 		}
