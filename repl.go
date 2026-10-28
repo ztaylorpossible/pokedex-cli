@@ -1,10 +1,10 @@
-package repl
+package main
 
 import (
 	"strings"
 )
 
-func CleanInput(text string) []string {
+func cleanInput(text string) []string {
 	text = strings.TrimSpace(text)
 	text = strings.ToLower(text)
 	split := strings.Split(text, " ")

@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"bufio"
 	"os"
-	"github.com/ztaylorpossible/pokedex-cli/repl"
 )
 
 func main() {
@@ -13,7 +12,7 @@ func main() {
 		fmt.Print("Pokedex > ")
 		scanner.Scan()
 		text := scanner.Text()
-		words := repl.CleanInput(text)
+		words := cleanInput(text)
 		fmt.Printf("Your command was: %s\n", words[0])
 	}
 }

@@ -1,4 +1,4 @@
-package repl
+package main
 
 import (
 	"testing"
@@ -24,7 +24,7 @@ func TestCleanInput(t *testing.T) {
 	}
 
 	for _, c := range cases {
-		actual := CleanInput(c.input)
+		actual := cleanInput(c.input)
 		if len(actual) != len(c.expected) {
 			t.Errorf("length mismatch - expected: %v (%v), actual: %v (%v)",
 			len(c.expected), c.expected, len(actual), actual);
