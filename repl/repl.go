@@ -4,7 +4,7 @@ import (
 	"strings"
 )
 
-func cleanInput(text string) []string {
+func CleanInput(text string) []string {
 	text = strings.TrimSpace(text)
 	text = strings.ToLower(text)
 	split := strings.Split(text, " ")
