@@ -4,6 +4,7 @@ import (
 	"strings"
 	"os"
 	"fmt"
+	"github.com/ztaylorpossible/pokedex-cli/internal"
 )
 
 type cliCommand struct {
@@ -26,17 +27,52 @@ func cleanInput(text string) []string {
 	return result
 }
 
-func commandHelp(options *config) error {
+func commandHelp(conf *config) error {
 	fmt.Println("Welcome to the Pokedex!")
 	fmt.Println("Usage:\n")
-	for _, val := range options.commands {
+	for _, val := range conf.commands {
 		fmt.Printf("%s: %s\n", val.name, val.description)
 	}
 
 	return nil
 }
 
-func commandExit(options *config) error {
+func commandMap(conf *config) error {
+	result, err := pokeapi.GetLocations(conf.next)
+	if err != nil {
+		return err
+	}
+	conf.next = result.Next
+	conf.previous = result.Previous
+
+	for _, location := range result.Results {
+		fmt.Println(location.Name)
+	}
+
+	return nil
+}
+
+func commandMapb(conf *config) error {
+	if conf.previous == "" {
+		fmt.Println("you're on the first page")
+		return nil
+	}
+
+	result, err := pokeapi.GetLocations(conf.previous)
+	if err != nil {
+		return err
+	}
+	conf.next = result.Next
+	conf.previous = result.Previous
+
+	for _, location := range result.Results {
+		fmt.Println(location.Name)
+	}
+
+	return nil
+}
+
+func commandExit(conf *config) error {
 	fmt.Println("Closing the Pokedex... Goodbye!")
 	os.Exit(0)
 
