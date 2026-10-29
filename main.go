@@ -4,16 +4,19 @@ import (
 	"fmt"
 	"bufio"
 	"os"
+	"time"
+	"github.com/ztaylorpossible/pokedex-cli/internal/pokecache"
 )
 
 type config struct {
 	commands map[string]cliCommand
 	next     string
 	previous string
+	cache    pokecache.Cache
 }
 
 func main() {
-	options := config{
+	conf := config{
 		commands: map[string]cliCommand{
 			"help": {
 				name: "help",
@@ -38,6 +41,7 @@ func main() {
 		},
 		next: "",
 		previous: "",
+		cache: pokecache.NewCache(5 * time.Minute),
 	}
 
 	scanner := bufio.NewScanner(os.Stdin)
@@ -51,13 +55,13 @@ func main() {
 			continue
 		}
 
-		command, ok := options.commands[words[0]]
+		command, ok := conf.commands[words[0]]
 		if !ok {
 			fmt.Println("Unknown command")
 			continue
 		}
 
-		err := command.callback(&options)
+		err := command.callback(&conf)
 		if err != nil {
 			fmt.Printf("Error processing command %s: %v\n", command.name, err)
 		}

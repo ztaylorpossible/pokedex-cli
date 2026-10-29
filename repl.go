@@ -4,7 +4,7 @@ import (
 	"strings"
 	"os"
 	"fmt"
-	"github.com/ztaylorpossible/pokedex-cli/internal"
+	"github.com/ztaylorpossible/pokedex-cli/internal/pokeapi"
 )
 
 type cliCommand struct {
@@ -29,7 +29,7 @@ func cleanInput(text string) []string {
 
 func commandHelp(conf *config) error {
 	fmt.Println("Welcome to the Pokedex!")
-	fmt.Println("Usage:\n")
+	fmt.Print("Usage:\n\n")
 	for _, val := range conf.commands {
 		fmt.Printf("%s: %s\n", val.name, val.description)
 	}
@@ -38,7 +38,7 @@ func commandHelp(conf *config) error {
 }
 
 func commandMap(conf *config) error {
-	result, err := pokeapi.GetLocations(conf.next)
+	result, err := pokeapi.GetLocations(conf.next, &conf.cache)
 	if err != nil {
 		return err
 	}
@@ -58,7 +58,7 @@ func commandMapb(conf *config) error {
 		return nil
 	}
 
-	result, err := pokeapi.GetLocations(conf.previous)
+	result, err := pokeapi.GetLocations(conf.previous, &conf.cache)
 	if err != nil {
 		return err
 	}
