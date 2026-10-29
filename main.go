@@ -33,6 +33,11 @@ func main() {
 				description: "List the previous 20 locations",
 				callback: commandMapb,
 			},
+			"explore": {
+				name: "explore",
+				description: "Explore an area for pokemon",
+				callback: commandExplore,
+			},
 			"exit": {
 				name: "exit",
 				description: "Exit the Pokedex",
@@ -61,7 +66,12 @@ func main() {
 			continue
 		}
 
-		err := command.callback(&conf)
+		var params []string
+		if len(words) > 1 {
+			params = words[1:]
+		}
+
+		err := command.callback(&conf, params)
 		if err != nil {
 			fmt.Printf("Error processing command %s: %v\n", command.name, err)
 		}

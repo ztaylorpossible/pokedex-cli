@@ -10,7 +10,7 @@ import (
 type cliCommand struct {
 	name        string
 	description string
-	callback    func(*config) error
+	callback    func(conf *config, params []string) error
 }
 
 func cleanInput(text string) []string {
@@ -27,7 +27,7 @@ func cleanInput(text string) []string {
 	return result
 }
 
-func commandHelp(conf *config) error {
+func commandHelp(conf *config, params []string) error {
 	fmt.Println("Welcome to the Pokedex!")
 	fmt.Print("Usage:\n\n")
 	for _, val := range conf.commands {
@@ -37,7 +37,7 @@ func commandHelp(conf *config) error {
 	return nil
 }
 
-func commandMap(conf *config) error {
+func commandMap(conf *config, params []string) error {
 	result, err := pokeapi.GetLocations(conf.next, &conf.cache)
 	if err != nil {
 		return err
@@ -52,7 +52,7 @@ func commandMap(conf *config) error {
 	return nil
 }
 
-func commandMapb(conf *config) error {
+func commandMapb(conf *config, params []string) error {
 	if conf.previous == "" {
 		fmt.Println("you're on the first page")
 		return nil
@@ -72,7 +72,17 @@ func commandMapb(conf *config) error {
 	return nil
 }
 
-func commandExit(conf *config) error {
+func commandExplore(conf *config, params []string) error {
+	if params == nil || len(params) < 1 {
+		return fmt.Errorf("No location provided to explore (Usage: explore [location-name])")
+	}
+	location := params[0]
+
+	fmt.Printf("Exploring %s\n", location)
+	return nil
+}
+
+func commandExit(conf *config, params []string) error {
 	fmt.Println("Closing the Pokedex... Goodbye!")
 	os.Exit(0)
 
