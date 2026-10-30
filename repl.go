@@ -4,6 +4,7 @@ import (
 	"strings"
 	"os"
 	"fmt"
+	"math/rand"
 	"github.com/ztaylorpossible/pokedex-cli/internal/pokeapi"
 )
 
@@ -93,6 +94,35 @@ func commandExplore(conf *config, params []string) error {
 	for _, encounter := range areaInfo.Pokemon_Encounters {
 		fmt.Printf(" - %s\n", encounter.Pokemon.Name)
 	}
+
+	return nil
+}
+
+func commandCatch(conf *config, params []string) error {
+	if params == nil || len(params) < 1 {
+		return fmt.Errorf("No pokemon provided to catch (Usage: catch [pokemon-name])")
+	}
+	pokemonName := params[0]
+
+	pokemonInfo, err := pokeapi.GetPokemonInfo(pokemonName, &conf.cache)
+	if err != nil {
+		return err
+	}
+
+	if pokemonInfo.Name == "" {
+		return fmt.Errorf("Couldn't find pokemon %s. Make sure to enter a valid name.", pokemonName)
+	}
+	fmt.Printf("Throwing a Pokeball at %s...\n", pokemonName)
+
+	baseExperience := pokemonInfo.Base_Experience
+	roll := rand.Intn(conf.catchRoll)
+	if roll < baseExperience {
+		fmt.Printf("%s escaped!\n", pokemonName)
+		return nil
+	}
+
+	fmt.Printf("%s was caught!\n", pokemonName)
+	conf.pokemon[pokemonName] = pokemonInfo
 
 	return nil
 }

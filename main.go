@@ -5,14 +5,17 @@ import (
 	"bufio"
 	"os"
 	"time"
+	"github.com/ztaylorpossible/pokedex-cli/internal/pokeapi"
 	"github.com/ztaylorpossible/pokedex-cli/internal/pokecache"
 )
 
 type config struct {
-	commands map[string]cliCommand
-	next     string
-	previous string
-	cache    pokecache.Cache
+	commands  map[string]cliCommand
+	next      string
+	previous  string
+	catchRoll int
+	pokemon   map[string]pokeapi.PokemonInfo
+	cache     pokecache.Cache
 }
 
 func main() {
@@ -35,8 +38,13 @@ func main() {
 			},
 			"explore": {
 				name: "explore",
-				description: "Explore an area for pokemon",
+				description: "Explore an area for pokemon (explore [location-name])",
 				callback: commandExplore,
+			},
+			"catch": {
+				name: "catch",
+				description: "Attempt to catch a pokemon (catch [pokemon-name])",
+				callback: commandCatch,
 			},
 			"exit": {
 				name: "exit",
@@ -46,6 +54,8 @@ func main() {
 		},
 		next: "",
 		previous: "",
+		catchRoll: 1000,
+		pokemon: make(map[string]pokeapi.PokemonInfo),
 		cache: pokecache.NewCache(5 * time.Minute),
 	}
 
@@ -62,7 +72,7 @@ func main() {
 
 		command, ok := conf.commands[words[0]]
 		if !ok {
-			fmt.Println("Unknown command")
+			fmt.Println("Unknown command. Use 'help' for a list of commands or 'exit' to quit.")
 			continue
 		}
 
