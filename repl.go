@@ -78,7 +78,22 @@ func commandExplore(conf *config, params []string) error {
 	}
 	location := params[0]
 
-	fmt.Printf("Exploring %s\n", location)
+	fmt.Printf("Exploring %s...\n", location)
+	areaInfo, err := pokeapi.GetLocationArea(location, &conf.cache)
+	if err != nil {
+		return err
+	}
+
+	if len(areaInfo.Pokemon_Encounters) < 1 {
+		fmt.Println("No Pokemon found")
+		return nil
+	}
+
+	fmt.Println("Found Pokemon:")
+	for _, encounter := range areaInfo.Pokemon_Encounters {
+		fmt.Printf(" - %s\n", encounter.Pokemon.Name)
+	}
+
 	return nil
 }
 
