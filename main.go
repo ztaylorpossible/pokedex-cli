@@ -46,6 +46,11 @@ func main() {
 				description: "Attempt to catch a pokemon (catch [pokemon-name])",
 				callback: commandCatch,
 			},
+			"inspect": {
+				name: "inspect",
+				description: "See info on a pokemon you have caught (inspect [pokemon-name])",
+				callback: commandInspect,
+			},
 			"exit": {
 				name: "exit",
 				description: "Exit the Pokedex",

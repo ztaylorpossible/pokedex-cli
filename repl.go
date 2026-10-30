@@ -98,6 +98,33 @@ func commandExplore(conf *config, params []string) error {
 	return nil
 }
 
+func commandInspect(conf *config, params []string) error {
+	if params == nil || len(params) < 1 {
+		return fmt.Errorf("No name provided to inspect (Usage: inspect [pokemon-name]")
+	}
+	name := params[0]
+
+	info, ok := conf.pokemon[name]
+	if !ok {
+		fmt.Printf("you have not caught that pokemon\n")
+		return nil
+	}
+
+	fmt.Printf("Name: %s\n", info.Name)
+	fmt.Printf("Height: %d\n", info.Height)
+	fmt.Printf("Weight: %d\n", info.Weight)
+	fmt.Println("Stats:")
+	for _, stat := range info.Stats {
+		fmt.Printf("  -%s: %d\n", stat.Stat.Name, stat.Base_Stat)
+	}
+	fmt.Println("Types:")
+	for _, pokeType := range info.Types {
+		fmt.Printf("  - %s\n", pokeType.Type.Name)
+	}
+
+	return nil
+}
+
 func commandCatch(conf *config, params []string) error {
 	if params == nil || len(params) < 1 {
 		return fmt.Errorf("No pokemon provided to catch (Usage: catch [pokemon-name])")
