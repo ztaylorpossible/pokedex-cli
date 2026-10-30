@@ -51,6 +51,11 @@ func main() {
 				description: "See info on a pokemon you have caught (inspect [pokemon-name])",
 				callback: commandInspect,
 			},
+			"pokedex": {
+				name: "pokedex",
+				description: "See a list of all the pokemon you have caught",
+				callback: commandPokedex,
+			},
 			"exit": {
 				name: "exit",
 				description: "Exit the Pokedex",
